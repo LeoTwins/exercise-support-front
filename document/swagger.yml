@@ -1,20 +1,83 @@
 openapi: 3.0.3
 info:
-  title: training-202407
+  title: exercise-support-front
   description: |
-    A案件を経験し、Vue, Golangの様々な知見を得たのでOUTPUTするため、TODOアプリを開発し、運用する<br/>
+    A案件を経験し、Vue, Golangの様々な知見を得たのでOUTPUTするための個人開発を行う<br/>
     openapiを介してバックエンド、フロントエンド間のコミュニケーションをスムーズにしたいため、openapi-typescriptを使用してフロント側の<br/>
     パス、リクエスト、レスポンスの方を自動生成する<br/>
     自動生成の元ネタなので積極的にopenapiをメンテナンスしてください
     フロント用に自動生成しやすい書き方は[こちら](https://openapi-ts.pages.dev/advanced#styleguide)
-
   version: 1.0.0
 tags:
+  - name: account
+    description: アカウント情報
   - name: category
     description: カテゴリ情報
   - name: todo
     description: Todo情報
 paths:
+  /normal/login:
+    post:
+      tags:
+        - account
+      summary: ログインAPI
+      description: |
+        ログインAPI
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Authorization information is missing or invalid.
+        '5XX':
+          description: Unexpected error.
+  /line/login:
+    post:
+      tags:
+        - account
+      summary: LINE認証リダイレクトAPI
+      description: |
+        LINE認証を行うためのURLにリダイレクトさせるAPI
+      responses:
+        '200':
+          description: リダイレクトURLを返す
+  /line/callback:
+    get:
+      tags:
+        - account
+      summary: LINEコールバックAPI
+      description: |
+        LINE認証後のコールバックを受けるAPIである。<br/>
+        Cognitoから送られてくるアクセストークンをCookieにセットし、ログイン後の画面にリダイレクトを行う
+      parameters:
+        - in: query
+          name : code
+          schema:
+            type: string
+          required: true
+        - in: query
+          name : state
+          schema:
+            type: string
+            description: CSRFトークン
+          required: true
+      responses:
+        '200':
+          description: |
+            アクセストークン
+        '401':
+          description: Authorization information is missing or invalid.
+        '5XX':
+          description: Unexpected error.
   /categories:
     get:
       tags:
