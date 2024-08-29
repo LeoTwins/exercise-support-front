@@ -1,7 +1,8 @@
 name: Build redocly etc files
-on: push
-permissions:
-  contents: read
+on: 
+  push:
+    branches:
+      - main # mainへのプッシュ（PRのマージでも）でワークフローを実行する
 jobs:
   run-redocly-cli:
     permissions:
