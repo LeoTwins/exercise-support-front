@@ -1,4 +1,4 @@
-name: Build redocly HTML file
+name: Build redocly etc files
 on: push
 permissions:
   contents: read
@@ -11,9 +11,15 @@ jobs:
       - name: Set up node
         uses: actions/setup-node@v4
       - name: Install Redocly CLI
-        run: npm install -g @redocly/cli@latest
+        run: |
+          npm install -g @redocly/cli@latest
+          npm install -g openapi-typescript typescript
       - name: Run build-redoc-html
         run: npx redocly build-docs document/swagger.yml --output=document/openapi.html
+      - name: Run build-redocly-mockdata
+        run: npx redocly bundle document/swagger.yml --output ./src/mocks/openapi.json
+      - name: Run generate:openapi
+        run: npx openapi-typescript document/swagger.yml -o ./src/shared/api/v1.schema.ts
       # ###################
       # workflowページからZIPでダウンロード可能になる。お客さんに展開する時、便利だな。
       # ###################
@@ -21,3 +27,10 @@ jobs:
       #   with:
       #     name: redocly-html
       #     path: output/redocly-static.html
+      - name: Commit documentation
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "Update redoc" -a || echo "No changes to commit"
+          git push

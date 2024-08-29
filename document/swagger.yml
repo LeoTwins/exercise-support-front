@@ -25,21 +25,13 @@ paths:
         **サインアップAPI**</br>
         <br/>
         <br/>
-        TBD<br/>
         - Eメールアドレス
         - ユーザー名
       requestBody:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                password:
-                  type: string
-                username:
-                  type: string
+              $ref: '#/components/schemas/SignUp'
       responses:
         '200':
           description: OK
@@ -62,12 +54,7 @@ paths:
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                email:
-                  type: string
-                password:
-                  type: string
+              $ref: "#/components/schemas/SignIn"
       responses:
         '200':
           description: OK
@@ -354,6 +341,22 @@ paths:
           description: Unexpected error.
 components:
   schemas:
+    SignUp:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        username:
+          type: string
+    SignIn:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
     Category:
       type: object
       properties:
