@@ -4,6 +4,8 @@ permissions:
   contents: read
 jobs:
   run-redocly-cli:
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -13,13 +15,16 @@ jobs:
       - name: Install Redocly CLI
         run: |
           npm install -g @redocly/cli@latest
-          npm install -g openapi-typescript typescript
       - name: Run build-redoc-html
         run: npx redocly build-docs document/swagger.yml --output=document/openapi.html
       - name: Run build-redocly-mockdata
         run: npx redocly bundle document/swagger.yml --output ./src/mocks/openapi.json
-      - name: Run generate:openapi
-        run: npx openapi-typescript document/swagger.yml -o ./src/shared/api/v1.schema.ts
+      # TODO : openapi-typescriptのスキーマ定義も自動生成したい
+      # - name: Run generate:openapi
+      #   run: npx openapi-typescript document/swagger.yml -o ./src/shared/api/v1.schema.ts
+      # TODO : msw-auto-mockも自動生成したい
+      # - name: Run generate:mock
+      #   run: npx msw-auto-mock document/swagger.yml -o ./src/mocks
       # ###################
       # workflowページからZIPでダウンロード可能になる。お客さんに展開する時、便利だな。
       # ###################
@@ -27,10 +32,7 @@ jobs:
       #   with:
       #     name: redocly-html
       #     path: output/redocly-static.html
-      - name: Commit documentation
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add .
-          git commit -m "Update redoc" -a || echo "No changes to commit"
-          git push
+      - uses: stefanzweifel/git-auto-commit-action@v3.0.0
+        with:
+          commit_message: Update redoc document
+          ref: ${{ github.head_ref }}
