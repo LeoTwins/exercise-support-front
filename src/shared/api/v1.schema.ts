@@ -4,6 +4,245 @@
  */
 
 export interface paths {
+    "/signup": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * サインアップAPI
+         * @description **サインアップAPI**</br>
+         *     <br/>
+         *     <br/>
+         *     TBD<br/>
+         *     - Eメールアドレス
+         *     - ユーザー名
+         *
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        email?: string;
+                        password?: string;
+                        username?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Authorization information is missing or invalid. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unexpected error. */
+                "5XX": {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/normal/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * ログインAPI
+         * @description **Emailアドレスを使用して、CognitoにサインインするためのAPI**</br>
+         *     <br/>
+         *     <br/>
+         *     本システムは、LINEログインを行うことが可能。<br/>
+         *     LINEログインを使用しないユーザー向けの認証API
+         *
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: {
+                content: {
+                    "application/json": {
+                        email?: string;
+                        password?: string;
+                    };
+                };
+            };
+            responses: {
+                /** @description OK */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Authorization information is missing or invalid. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unexpected error. */
+                "5XX": {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/line/login": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * LINE認証リダイレクトAPI
+         * @description **LINE認証を行うためのURLにリダイレクトさせるAPI**</br>
+         *     <br/>
+         *     LINEログインを行うためには、以下のURLにクライアントを誘導させる必要がある。</br>
+         *     その際、`https://access.line.me/oauth2/v2.1/authorize`にリダイレクトさせる必要があるが、</br>
+         *     他にもLINEのClientID等が必要になる。</br>
+         *     これらをフロントエンド側に持たせるのでなく、バックエンド側でラップすることで情報を集約させる目的で本APIでラップするもの。</br>
+         *     </br>
+         *     </br>
+         *     **FYI. [Go言語]LINE ログイン連携方法**
+         *     - https://qiita.com/KWS_0901/items/8c4accdda43bc9f26a57
+         *
+         */
+        post: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description リダイレクトURLを返す */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/line/callback": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * LINEコールバックAPI
+         * @description **LINE認証コールバックAPI**<br/>
+         *     LINE認可エンドポイントにアクセスし、ログイン情報を入力後、認可コードを受けるためのコールバックAPIである。<br/>
+         *     認可コードと、LINEクライアントシークレットを用いてOAuth2認証を行い、AccessTokenを取得する。
+         *     AccessTokenをCookieにセットし、ログイン後の画面に
+         *     Cognitoから送られてくるアクセストークンをCookieにセットし、ログイン後の画面にリダイレクトを行う
+         *     </br>
+         *     </br>
+         *     **FYI. [Go言語]LINE ログイン連携方法**
+         *     - https://qiita.com/KWS_0901/items/8c4accdda43bc9f26a57
+         *
+         */
+        get: {
+            parameters: {
+                query: {
+                    code: string;
+                    state: string;
+                };
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description アクセストークン
+                 *      */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Authorization information is missing or invalid. */
+                401: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+                /** @description Unexpected error. */
+                "5XX": {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content?: never;
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/categories": {
         parameters: {
             query?: never;

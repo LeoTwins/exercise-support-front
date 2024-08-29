@@ -21,6 +21,38 @@ const next = () => {
 };
 
 export const handlers = [
+  http.post(`${baseURL}/signup`, async () => {
+    const resultArray = [
+      [undefined, { status: 200 }],
+      [undefined, { status: 401 }],
+      [undefined, { status: 5 }],
+    ];
+
+    return HttpResponse.json(...resultArray[next() % resultArray.length]);
+  }),
+  http.post(`${baseURL}/normal/login`, async () => {
+    const resultArray = [
+      [undefined, { status: 200 }],
+      [undefined, { status: 401 }],
+      [undefined, { status: 5 }],
+    ];
+
+    return HttpResponse.json(...resultArray[next() % resultArray.length]);
+  }),
+  http.post(`${baseURL}/line/login`, async () => {
+    const resultArray = [[undefined, { status: 200 }]];
+
+    return HttpResponse.json(...resultArray[next() % resultArray.length]);
+  }),
+  http.get(`${baseURL}/line/callback`, async () => {
+    const resultArray = [
+      [undefined, { status: 200 }],
+      [undefined, { status: 401 }],
+      [undefined, { status: 5 }],
+    ];
+
+    return HttpResponse.json(...resultArray[next() % resultArray.length]);
+  }),
   http.get(`${baseURL}/categories`, async () => {
     const resultArray = [
       [await getGetCategories200Response(), { status: 200 }],
