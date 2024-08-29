@@ -26,7 +26,8 @@ paths:
         <br/>
         <br/>
         TBD<br/>
-        TBD
+        - Eメールアドレス
+        - ユーザー名
       requestBody:
         content:
           application/json:
@@ -36,6 +37,8 @@ paths:
                 email:
                   type: string
                 password:
+                  type: string
+                username:
                   type: string
       responses:
         '200':
