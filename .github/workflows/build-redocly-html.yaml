@@ -6,14 +6,14 @@ jobs:
   run-redocly-cli:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-        with:
-          sparse-checkout: swagger.yaml
-          sparse-checkout-cone-mode: false
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-      - run: npx redocly build-docs document/swagger.yml --output=document/openapi.html
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up node
+        uses: actions/setup-node@v4
+      - name: Install Redocly CLI
+        run: npm install -g @redocly/cli@latest
+      - name: Run build-redoc-html
+        run: npx redocly build-docs document/swagger.yml --output=document/openapi.html
       # ###################
       # workflowページからZIPでダウンロード可能になる。お客さんに展開する時、便利だな。
       # ###################
