@@ -1,0 +1,23 @@
+name: Build redocly HTML file
+on: push
+permissions:
+  contents: read
+jobs:
+  run-redocly-cli:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: swagger.yaml
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - run: npx redocly build-docs document/swagger.yml --output=document/openapi.html
+      # ###################
+      # workflowページからZIPでダウンロード可能になる。お客さんに展開する時、便利だな。
+      # ###################
+      # - uses: actions/upload-artifact@v3
+      #   with:
+      #     name: redocly-html
+      #     path: output/redocly-static.html
