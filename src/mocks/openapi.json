@@ -1,11 +1,15 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "training-202407",
-    "description": "A案件を経験し、Vue, Golangの様々な知見を得たのでOUTPUTするため、TODOアプリを開発し、運用する<br/>\nopenapiを介してバックエンド、フロントエンド間のコミュニケーションをスムーズにしたいため、openapi-typescriptを使用してフロント側の<br/>\nパス、リクエスト、レスポンスの方を自動生成する<br/>\n自動生成の元ネタなので積極的にopenapiをメンテナンスしてください\nフロント用に自動生成しやすい書き方は[こちら](https://openapi-ts.pages.dev/advanced#styleguide)\n",
+    "title": "exercise-support-front",
+    "description": "A案件を経験し、Vue, Golangの様々な知見を得たのでOUTPUTするための個人開発を行う<br/>\nopenapiを介してバックエンド、フロントエンド間のコミュニケーションをスムーズにしたいため、openapi-typescriptを使用してフロント側の<br/>\nパス、リクエスト、レスポンスの方を自動生成する<br/>\n自動生成の元ネタなので積極的にopenapiをメンテナンスしてください\nフロント用に自動生成しやすい書き方は[こちら](https://openapi-ts.pages.dev/advanced#styleguide)\n",
     "version": "1.0.0"
   },
   "tags": [
+    {
+      "name": "account",
+      "description": "アカウント情報"
+    },
     {
       "name": "category",
       "description": "カテゴリ情報"
@@ -16,6 +20,117 @@
     }
   ],
   "paths": {
+    "/signup": {
+      "post": {
+        "tags": [
+          "account"
+        ],
+        "summary": "サインアップAPI",
+        "description": "**サインアップAPI**</br>\n<br/>\n<br/>\n- Eメールアドレス\n- ユーザー名\n",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignUp"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid."
+          },
+          "5XX": {
+            "description": "Unexpected error."
+          }
+        }
+      }
+    },
+    "/normal/login": {
+      "post": {
+        "tags": [
+          "account"
+        ],
+        "summary": "ログインAPI",
+        "description": "**Emailアドレスを使用して、CognitoにサインインするためのAPI**</br>\n<br/>\n<br/>\n本システムは、LINEログインを行うことが可能。<br/>\nLINEログインを使用しないユーザー向けの認証API\n",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignIn"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid."
+          },
+          "5XX": {
+            "description": "Unexpected error."
+          }
+        }
+      }
+    },
+    "/line/login": {
+      "post": {
+        "tags": [
+          "account"
+        ],
+        "summary": "LINE認証リダイレクトAPI",
+        "description": "**LINE認証を行うためのURLにリダイレクトさせるAPI**</br>\n<br/>\nLINEログインを行うためには、以下のURLにクライアントを誘導させる必要がある。</br>\nその際、`https://access.line.me/oauth2/v2.1/authorize`にリダイレクトさせる必要があるが、</br>\n他にもLINEのClientID等が必要になる。</br>\nこれらをフロントエンド側に持たせるのでなく、バックエンド側でラップすることで情報を集約させる目的で本APIでラップするもの。</br>\n</br>\n</br>\n**FYI. [Go言語]LINE ログイン連携方法**\n- https://qiita.com/KWS_0901/items/8c4accdda43bc9f26a57\n",
+        "responses": {
+          "200": {
+            "description": "リダイレクトURLを返す"
+          }
+        }
+      }
+    },
+    "/line/callback": {
+      "get": {
+        "tags": [
+          "account"
+        ],
+        "summary": "LINEコールバックAPI",
+        "description": "**LINE認証コールバックAPI**<br/>\nLINE認可エンドポイントにアクセスし、ログイン情報を入力後、認可コードを受けるためのコールバックAPIである。<br/>\n認可コードと、LINEクライアントシークレットを用いてOAuth2認証を行い、AccessTokenを取得する。\nAccessTokenをCookieにセットし、ログイン後の画面に\nCognitoから送られてくるアクセストークンをCookieにセットし、ログイン後の画面にリダイレクトを行う\n</br>\n</br>\n**FYI. [Go言語]LINE ログイン連携方法**\n- https://qiita.com/KWS_0901/items/8c4accdda43bc9f26a57\n",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "code",
+            "schema": {
+              "type": "string"
+            },
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "state",
+            "schema": {
+              "type": "string",
+              "description": "CSRFトークン"
+            },
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "アクセストークン\n"
+          },
+          "401": {
+            "description": "Authorization information is missing or invalid."
+          },
+          "5XX": {
+            "description": "Unexpected error."
+          }
+        }
+      }
+    },
     "/categories": {
       "get": {
         "tags": [
@@ -348,6 +463,31 @@
   },
   "components": {
     "schemas": {
+      "SignUp": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "username": {
+            "type": "string"
+          }
+        }
+      },
+      "SignIn": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
       "Category": {
         "type": "object",
         "properties": {
