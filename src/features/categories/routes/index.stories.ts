@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from "@storybook/vue3";
 import { http, HttpResponse } from 'msw'
 
 import { fn } from "@storybook/test";
-import IndexPage from "./IndexPage.vue";
+import IndexPage from "./index.vue";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories
 const meta: Meta<typeof IndexPage> = {
