@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
-import IndexPage from "@/features/categories/routes/IndexPage.vue";
 import { PublicLayout, PrivateLayout } from "@/components/layout";
-import TodoListPage from "@/features/todo/list/TodoListPage.vue";
-import LoginPage from "@/features/login/LoginPage.vue";
+import { LoginPage } from "@/features/login";
+import { CategoryPage } from "@/features/categories";
+import { TodoListPage } from "@/features/todo/list";
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,7 +18,7 @@ const router = createRouter({
     {
       path: "/category",
       name: "category",
-      component: IndexPage,
+      component: CategoryPage,
       meta: {
         layout: PrivateLayout
       }

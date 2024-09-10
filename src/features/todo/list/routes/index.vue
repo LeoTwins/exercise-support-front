@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import { useInteract } from "./hooks/useInteract";
+import { useInteract } from "../hooks/useInteract";
 import { useCategoryInteract} from "@/hooks/category/useInteract"
-import TodoList from "./components/TodoList.vue"
+import TodoList from "@/features/todo/list/components/TodoList.vue"
 
 const { todos } = useInteract()
 const { categories } = useCategoryInteract()
